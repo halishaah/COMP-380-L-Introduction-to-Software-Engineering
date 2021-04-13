@@ -93,30 +93,6 @@ public class Todo_Util extends DB_Util {
 
         return todo;
     }
-
-    // @name updateTodo
-    // @desc update an item
-    public boolean updateTodo(Todo todo) {
-        ContentValues val = new ContentValues();
-        val.put("title", todo.getTitle());
-        val.put("description", todo.getDescription());
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        boolean greatSuccess = db.update("Todo", val, "id='"+todo.getId()+"'", null) > 0;
-        db.close();
-
-        return greatSuccess;
-    }
-
-    // @name deleteTodo
-    // @desc delete an item
-    public boolean deleteTodo(int id) {
-        boolean deleted;
-        SQLiteDatabase db = this.getWritableDatabase();
-        deleted = db.delete("Todo", "id='" + id + "'", null) > 0;
-        db.close();
-        return deleted;
-    }
 }
 
 

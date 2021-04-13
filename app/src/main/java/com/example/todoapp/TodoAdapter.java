@@ -73,14 +73,6 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoHolder> {
                     TransitionManager.beginDelayedTransition(parent);
                 }
             });
-
-            // Set on click listener for editing note
-            editImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    itemClicked.onClick((getAdapterPosition()), itemView);
-                }
-            });
         }
     }
 
