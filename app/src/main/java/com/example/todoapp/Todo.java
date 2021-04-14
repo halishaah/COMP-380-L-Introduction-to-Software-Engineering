@@ -1,5 +1,7 @@
 package com.example.todoapp;
 
+import android.widget.Toast;
+
 //Todo_Class with the proper structure
 public class Todo {
     // Private vars since we are including getters and setters
@@ -24,6 +26,12 @@ public class Todo {
     public String getTitle() {
         return title;
     }
+    public int checkTitle(String title){
+        if (title.trim().length() == 0) {
+            return 0;
+        }
+        return 1;
+    }
 
     public void setTitle(String title) {
         this.title = title;
@@ -32,8 +40,15 @@ public class Todo {
     public String getDescription() {
         return description;
     }
+    public int checkDescription(String description){
+        if (description.trim().length() == 0) {
+            return 0;
+        }
+        return 1;
+    }
 
     public void setDescription(String description) {
         this.description = description;
     }
+
 }
