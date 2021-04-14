@@ -1,6 +1,5 @@
 package com.example.todoapp;
 
-import android.widget.Toast;
 
 //Todo_Class with the proper structure
 public class Todo {
