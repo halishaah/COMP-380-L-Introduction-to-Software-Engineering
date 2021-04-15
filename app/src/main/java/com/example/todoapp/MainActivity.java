@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                                 String desc = updateDesc.getText().toString();
 
                                 Todo todo = new Todo(title, desc);
-                                if (checkEditTextIsEmpty(todo)) {
+                                if ((todo.checkTitle(title)==1) && (todo.checkDescription(desc)==1)) {
                                     boolean isInserted = new Todo_Util(MainActivity.this).createTodo(todo);
 
                                     if (isInserted) {
@@ -65,6 +65,17 @@ public class MainActivity extends AppCompatActivity {
                                         Toast.makeText(MainActivity.this, "Error Saving", Toast.LENGTH_SHORT).show();
                                     }
                                     dialog.cancel();
+                                }else{
+                                        if (todo.checkTitle(title) == 0 || todo.checkDescription(desc) == 0) {
+                                            if (title.trim().length() == 0) {
+                                                Toast.makeText(MainActivity.this, "Error Title is Mandatory", Toast.LENGTH_SHORT).show();
+
+                                            }
+                                            if (desc.trim().length() == 0) {
+                                                Toast.makeText(MainActivity.this, "Error Description is Mandatory", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+
                                 }
                             }
                         }).show();
@@ -146,27 +157,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Make fields mandatory
-    public  boolean checkEditTextIsEmpty(Todo answer) {
-        try {
-            String title = answer.getTitle();
-            String desc = answer.getDescription();
-            if (title.trim().length() == 0 || desc.trim().length() == 0) {
-                if (title.trim().length() == 0) {
-                    Toast.makeText(MainActivity.this, "Error Title is Mandatory", Toast.LENGTH_SHORT).show();
 
-                }
-                if (desc.trim().length() == 0) {
-                    Toast.makeText(MainActivity.this, "Error Description is Mandatory", Toast.LENGTH_SHORT).show();
-                }
-                return false;
-            }
-        }
-        catch (Exception ignored) {
-            return false;
-        }
-        return true;
-    }
 
 }
 

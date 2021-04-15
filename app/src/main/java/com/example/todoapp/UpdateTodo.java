@@ -47,24 +47,37 @@ public class UpdateTodo extends AppCompatActivity {
                 //Set same id as in databse for that todo
                 // Put default as one for error handling in case id does not show up
                 todo.setId(intent.getIntExtra("id", 1));
+                if ((todo.checkTitle(todo.getTitle()) == 1) && (todo.checkDescription(todo.getDescription()) == 1)) {
+                    if (new Todo_Util(UpdateTodo.this).updateTodo(todo)) {
+                        Toast.makeText(UpdateTodo.this, "Todo Updated", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(UpdateTodo.this, "Update Failed, Please try again!", Toast.LENGTH_SHORT).show();
+                    }
 
-                if (new Todo_Util(UpdateTodo.this).updateTodo(todo)) {
-                    Toast.makeText(UpdateTodo.this, "Todo Updated", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(UpdateTodo.this, "Update Failed, Please try again!", Toast.LENGTH_SHORT).show();
+                    // Simulate going back to homepage animation
+                    btnSave.setVisibility(View.GONE);
+                    btnExit.setVisibility(View.GONE);
+                    TransitionManager.beginDelayedTransition(linearLayout);
+                    onBackPressed();
+                    update_title.setText(intent.getStringExtra("title"));
+                    update_desc.setText(intent.getStringExtra("description"));
+                }else{
+                    if (todo.checkTitle(todo.getTitle()) == 0 || todo.checkDescription(todo.getDescription()) == 0) {
+                        if (todo.getTitle().trim().length() == 0) {
+                            Toast.makeText(UpdateTodo.this, "Error Title is Mandatory", Toast.LENGTH_SHORT).show();
+
+                        }
+                        if (todo.getDescription().trim().length() == 0) {
+                            Toast.makeText(UpdateTodo.this, "Error Description is Mandatory", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
                 }
-
-                // Simulate going back to homepage animation
-                btnSave.setVisibility(View.GONE);
-                btnExit.setVisibility(View.GONE);
-                TransitionManager.beginDelayedTransition(linearLayout);
-                onBackPressed();
             }
         });
-
-        update_title.setText(intent.getStringExtra("title"));
-        update_desc.setText(intent.getStringExtra("description"));
     }
+
+
 
 
     // Animation to set button visibility to none after clicked
