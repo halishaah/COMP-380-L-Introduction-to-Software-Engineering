@@ -1,7 +1,7 @@
 package com.example.todoapp;
 
+// Java imports of pachkages
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.transition.TransitionManager;
@@ -13,11 +13,15 @@ import android.widget.Toast;
 
 public class UpdateTodo extends AppCompatActivity {
 
+    // Create a text field for the title, desc
     EditText update_title, update_desc;
+
+    // Create the save and exit buttons
     Button btnExit, btnSave;
 
     LinearLayout linearLayout;
 
+    // This is the method that updates the todo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +36,7 @@ public class UpdateTodo extends AppCompatActivity {
         btnExit = findViewById(R.id.btn_exit);
         btnSave = findViewById(R.id.btn_save);
 
+        // This allows the user to press exit to discard the changes
         btnExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -39,6 +44,7 @@ public class UpdateTodo extends AppCompatActivity {
             }
         });
 
+        // This allows the user to click the save button to save updates to the todo
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,40 +53,27 @@ public class UpdateTodo extends AppCompatActivity {
                 //Set same id as in databse for that todo
                 // Put default as one for error handling in case id does not show up
                 todo.setId(intent.getIntExtra("id", 1));
-                if ((todo.checkTitle(todo.getTitle()) == 1) && (todo.checkDescription(todo.getDescription()) == 1)) {
-                    if (new Todo_Util(UpdateTodo.this).updateTodo(todo)) {
-                        Toast.makeText(UpdateTodo.this, "Todo Updated", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(UpdateTodo.this, "Update Failed, Please try again!", Toast.LENGTH_SHORT).show();
-                    }
 
-                    // Simulate going back to homepage animation
-                    btnSave.setVisibility(View.GONE);
-                    btnExit.setVisibility(View.GONE);
-                    TransitionManager.beginDelayedTransition(linearLayout);
-                    onBackPressed();
-                    update_title.setText(intent.getStringExtra("title"));
-                    update_desc.setText(intent.getStringExtra("description"));
-                }else{
-                    if (todo.checkTitle(todo.getTitle()) == 0 || todo.checkDescription(todo.getDescription()) == 0) {
-                        if (todo.getTitle().trim().length() == 0) {
-                            Toast.makeText(UpdateTodo.this, "Error Title is Mandatory", Toast.LENGTH_SHORT).show();
-
-                        }
-                        if (todo.getDescription().trim().length() == 0) {
-                            Toast.makeText(UpdateTodo.this, "Error Description is Mandatory", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
+                // Check to see of todo was updated
+                if (new Todo_Util(UpdateTodo.this).updateTodo(todo)) {
+                    Toast.makeText(UpdateTodo.this, "Todo Updated", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(UpdateTodo.this, "Update Failed, Please try again!", Toast.LENGTH_SHORT).show();
                 }
+
+                // Simulate going back to homepage animation
+                btnSave.setVisibility(View.GONE);
+                btnExit.setVisibility(View.GONE);
+                TransitionManager.beginDelayedTransition(linearLayout);
+                onBackPressed();
             }
         });
+
+        update_title.setText(intent.getStringExtra("title"));
+        update_desc.setText(intent.getStringExtra("description"));
     }
 
-
-
-
-    // Animation to set button visibility to none after clicked
+    // Animation to set button visibility to none after clicked. This is for a smoother trasnsition back to home page
     @Override
     public void onBackPressed() {
         btnSave.setVisibility(View.GONE);
