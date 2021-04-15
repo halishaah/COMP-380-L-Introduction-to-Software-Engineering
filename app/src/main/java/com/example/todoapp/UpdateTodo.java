@@ -49,16 +49,31 @@ public class UpdateTodo extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Todo todo = new Todo(update_title.getText().toString(), update_desc.getText().toString());
-
+                String title=todo.getTitle();
+                String desc = todo.getDescription();
                 //Set same id as in databse for that todo
                 // Put default as one for error handling in case id does not show up
                 todo.setId(intent.getIntExtra("id", 1));
 
                 // Check to see of todo was updated
-                if (new Todo_Util(UpdateTodo.this).updateTodo(todo)) {
-                    Toast.makeText(UpdateTodo.this, "Todo Updated", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(UpdateTodo.this, "Update Failed, Please try again!", Toast.LENGTH_SHORT).show();
+                int a = 0;
+                if ((todo.checkTitle(title)==1) && (todo.checkDescription(desc)==1)) {
+                    if (new Todo_Util(UpdateTodo.this).updateTodo(todo)) {
+                        Toast.makeText(UpdateTodo.this, "Todo Updated", Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        Toast.makeText(UpdateTodo.this, "Update Failed, Please try again!", Toast.LENGTH_SHORT).show();
+                    }
+                }else{
+                    if (todo.checkTitle(title) == 0 || todo.checkDescription(desc) == 0) {
+                        if (title.trim().length() == 0) {
+                            Toast.makeText(UpdateTodo.this, "Error Title is Mandatory", Toast.LENGTH_SHORT).show();
+
+                        }
+                        if (desc.trim().length() == 0) {
+                            Toast.makeText(UpdateTodo.this, "Error Description is Mandatory", Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 }
 
                 // Simulate going back to homepage animation
@@ -68,9 +83,12 @@ public class UpdateTodo extends AppCompatActivity {
                 onBackPressed();
             }
         });
+        int a =0;
 
-        update_title.setText(intent.getStringExtra("title"));
-        update_desc.setText(intent.getStringExtra("description"));
+            update_title.setText(intent.getStringExtra("title"));
+
+            update_desc.setText(intent.getStringExtra("description"));
+
     }
 
     // Animation to set button visibility to none after clicked. This is for a smoother trasnsition back to home page
