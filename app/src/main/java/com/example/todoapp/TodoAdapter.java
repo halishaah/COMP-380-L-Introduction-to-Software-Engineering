@@ -42,6 +42,8 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoHolder> {
         // Set the data to its specific element
         holder.title.setText(todos.get(position).getTitle());
         holder.description.setText(todos.get(position).getDescription());
+        holder.date.setText(todos.get(position).getDate());
+
     }
 
     @Override
@@ -53,12 +55,14 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoHolder> {
     class TodoHolder extends RecyclerView.ViewHolder {
         TextView title;
         TextView description;
+        TextView date;
         ImageView editImage;
 
         public TodoHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.txt_todo_name);
             description = itemView.findViewById(R.id.txt_todo_description);
+            date=itemView.findViewById(R.id.txt_todo_date);
             editImage = itemView.findViewById(R.id.img_edit);
 
             // Expand the description box by clicking
