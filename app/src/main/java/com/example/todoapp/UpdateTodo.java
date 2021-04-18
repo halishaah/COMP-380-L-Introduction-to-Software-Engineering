@@ -58,29 +58,12 @@ public class UpdateTodo extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int day = update_datePicker.getDayOfMonth();
-                String day1;
-                if(day<10){
-                    day1="0"+day;
-                }else{
-                    day1=String.valueOf(day);
-                }
-                int month = update_datePicker.getMonth()+1;
-                String month1;
-                if(month<10){
-                    month1="0"+month;
-                }else{
-                    month1=String.valueOf(month);
-                }
-                int year = update_datePicker.getYear();
-                String date = (month1+"/"+day1+"/"+year);
+
+                String date = dateFormat();
 
                 Todo todo = new Todo(update_title.getText().toString(), update_desc.getText().toString(), date);
-                System.out.println(todo.getDate());
                 String title=todo.getTitle();
                 String desc = todo.getDescription();
-
-
                 //Set same id as in databse for that todo
                 // Put default as one for error handling in case id does not show up
                 todo.setId(intent.getIntExtra("id", 1));
@@ -97,7 +80,6 @@ public class UpdateTodo extends AppCompatActivity {
                     if (todo.checkTitle(title) == 0 || todo.checkDescription(desc) == 0) {
                         if (title.trim().length() == 0) {
                             Toast.makeText(UpdateTodo.this, "Error Title is Mandatory", Toast.LENGTH_SHORT).show();
-
                         }
                         if (desc.trim().length() == 0) {
                             Toast.makeText(UpdateTodo.this, "Error Description is Mandatory", Toast.LENGTH_SHORT).show();
@@ -138,5 +120,24 @@ public class UpdateTodo extends AppCompatActivity {
         btnExit.setVisibility(View.GONE);
         TransitionManager.beginDelayedTransition(linearLayout);
         super.onBackPressed();
+    }
+    public String dateFormat(){
+        int day = update_datePicker.getDayOfMonth();
+        String day1;
+        if(day<10){
+            day1="0"+day;
+        }else{
+            day1=String.valueOf(day);
+        }
+        int month = update_datePicker.getMonth()+1;
+        String month1;
+        if(month<10){
+            month1="0"+month;
+        }else{
+            month1=String.valueOf(month);
+        }
+        int year = update_datePicker.getYear();
+        String date = (month1+"/"+day1+"/"+year);
+        return date;
     }
 }

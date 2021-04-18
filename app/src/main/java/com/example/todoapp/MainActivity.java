@@ -52,8 +52,8 @@ public class MainActivity extends AppCompatActivity {
                         .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                String title = updateTitle.getText().toString();
-                                String desc = updateDesc.getText().toString();
+                                String title1 = updateTitle.getText().toString();
+                                String desc1 = updateDesc.getText().toString();
                                 //formats extra 0's
                                 int day = updateDate.getDayOfMonth();
                                 String day1;
@@ -73,14 +73,10 @@ public class MainActivity extends AppCompatActivity {
                                 String date = (month1+"/"+day1+"/"+year);
 
 
-                                Todo todo = new Todo(title, desc,date);
+                                Todo todo = new Todo(title1, desc1,date);
 
-                                if ((todo.checkTitle(title)==1) && (todo.checkDescription(desc)==1)) {
+                                if ((todo.checkTitle(title1)==1) && (todo.checkDescription(desc1)==1)) {
                                     boolean isInserted = new Todo_Util(MainActivity.this).createTodo(todo);
-                                    updateDate.updateDate(year,month,day);
-                                     todo.setDay(day);
-                                     todo.setMonth(month);
-                                     todo.setYear(year);
                                     if (isInserted) {
                                         Toast.makeText(MainActivity.this, "Successful", Toast.LENGTH_SHORT).show();
                                         loadTheTodos();
@@ -89,12 +85,11 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                     dialog.cancel();
                                 }else{
-                                        if (todo.checkTitle(title) == 0 || todo.checkDescription(desc) == 0) {
-                                            if (title.trim().length() == 0) {
+                                        if (todo.checkTitle(title1) == 0 || todo.checkDescription(desc1) == 0) {
+                                            if (title1.trim().length() == 0) {
                                                 Toast.makeText(MainActivity.this, "Error Title is Mandatory", Toast.LENGTH_SHORT).show();
-
                                             }
-                                            if (desc.trim().length() == 0) {
+                                            if (desc1.trim().length() == 0) {
                                                 Toast.makeText(MainActivity.this, "Error Description is Mandatory", Toast.LENGTH_SHORT).show();
                                             }
                                         }
