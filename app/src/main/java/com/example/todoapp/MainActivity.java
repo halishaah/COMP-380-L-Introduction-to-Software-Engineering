@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -44,20 +45,38 @@ public class MainActivity extends AppCompatActivity {
 
                 EditText updateTitle = viewInput.findViewById(R.id.update_title);
                 EditText updateDesc = viewInput.findViewById(R.id.update_desc);
-
+                DatePicker updateDate = viewInput.findViewById(R.id.datePicker);
                 new AlertDialog.Builder(MainActivity.this)
                         .setView(viewInput)
                         .setTitle("Add A Todo")
                         .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                String title = updateTitle.getText().toString();
-                                String desc = updateDesc.getText().toString();
+                                String title1 = updateTitle.getText().toString();
+                                String desc1 = updateDesc.getText().toString();
+                                //formats extra 0's
+                                int day = updateDate.getDayOfMonth();
+                                String day1;
+                                if(day<10){
+                                    day1="0"+day;
+                                }else{
+                                    day1=String.valueOf(day);
+                                }
+                                int month = updateDate.getMonth()+1;
+                                String month1;
+                                if(month<10){
+                                    month1="0"+month;
+                                }else{
+                                    month1=String.valueOf(month);
+                                }
+                                int year = updateDate.getYear();
+                                String date = (month1+"/"+day1+"/"+year);
 
-                                Todo todo = new Todo(title, desc);
-                                if ((todo.checkTitle(title)==1) && (todo.checkDescription(desc)==1)) {
+
+                                Todo todo = new Todo(title1, desc1,date);
+
+                                if ((todo.checkTitle(title1)==1) && (todo.checkDescription(desc1)==1)) {
                                     boolean isInserted = new Todo_Util(MainActivity.this).createTodo(todo);
-
                                     if (isInserted) {
                                         Toast.makeText(MainActivity.this, "Successful", Toast.LENGTH_SHORT).show();
                                         loadTheTodos();
@@ -66,12 +85,11 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                     dialog.cancel();
                                 }else{
-                                        if (todo.checkTitle(title) == 0 || todo.checkDescription(desc) == 0) {
-                                            if (title.trim().length() == 0) {
+                                        if (todo.checkTitle(title1) == 0 || todo.checkDescription(desc1) == 0) {
+                                            if (title1.trim().length() == 0) {
                                                 Toast.makeText(MainActivity.this, "Error Title is Mandatory", Toast.LENGTH_SHORT).show();
-
                                             }
-                                            if (desc.trim().length() == 0) {
+                                            if (desc1.trim().length() == 0) {
                                                 Toast.makeText(MainActivity.this, "Error Description is Mandatory", Toast.LENGTH_SHORT).show();
                                             }
                                         }
@@ -141,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, UpdateTodo.class);
         intent.putExtra("title", todo.getTitle());
         intent.putExtra("description", todo.getDescription());
+        intent.putExtra("date",todo.getDate());
         intent.putExtra("id", todo.getId());
 
         // For the update animation

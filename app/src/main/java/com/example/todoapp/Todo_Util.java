@@ -19,6 +19,7 @@ public class Todo_Util extends DB_Util {
         ContentValues val = new ContentValues();
         val.put("title", todo.getTitle());
         val.put("description", todo.getDescription());
+        val.put("date",todo.getDate());
 
         SQLiteDatabase db = this.getWritableDatabase();
         boolean greatSuccess = db.insert("Todo", null, val) > 0;
@@ -46,8 +47,9 @@ public class Todo_Util extends DB_Util {
                 // Get description of row the cursor is located on
                 String desc = cursor.getString(cursor.getColumnIndex("description"));
 
+                String date = cursor.getString(cursor.getColumnIndex("date"));
                 // Add the todoitem to the array list
-                Todo todo = new Todo(title, desc);
+                Todo todo = new Todo(title, desc,date);
 
                 // Set id
                 todo.setId(id);
@@ -81,9 +83,11 @@ public class Todo_Util extends DB_Util {
 
             // Get description of row the cursor is located on
             String desc = cursor.getString(cursor.getColumnIndex("description"));
+            String date = cursor.getString(cursor.getColumnIndex("date"));
 
             // Add the todoitem to the array list
-            todo = new Todo(title, desc);
+            todo = new Todo(title, desc,date);
+
 
             // Set id
             todo.setId(todoId);
@@ -100,6 +104,7 @@ public class Todo_Util extends DB_Util {
         ContentValues val = new ContentValues();
         val.put("title", todo.getTitle());
         val.put("description", todo.getDescription());
+        val.put("date",todo.getDate());
         SQLiteDatabase db = this.getWritableDatabase();
 
         boolean greatSuccess = db.update("Todo", val, "id='"+todo.getId()+"'", null) > 0;
