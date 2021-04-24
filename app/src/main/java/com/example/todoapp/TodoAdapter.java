@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.content.Context;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,17 +16,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoHolder> {
+public class  TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoHolder> implements Filterable {
     ArrayList<Todo> todos;
     Context context;
     ItemClicked itemClicked;
     ViewGroup parent;
+
+    //make a copy of todos list
+    ArrayList<Todo> todosFull;
 
     // To communicate between adapter and main activity
     public TodoAdapter(ArrayList<Todo> arrayList, Context context, ItemClicked itemClicked) {
         todos = arrayList;
         this.context = context;
         this.itemClicked = itemClicked;
+
+        todosFull = new ArrayList<>(todos);
     }
 
     @NonNull
@@ -91,4 +98,39 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoHolder> {
     interface ItemClicked {
         void onClick(int position, View view);
     }
+
+
+    @Override
+    public Filter getFilter() {
+        return exampleFilter;
+    }
+    private Filter exampleFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            ArrayList<Todo> filteredList = new ArrayList<>();
+
+            if(constraint == null || constraint.length() == 0){
+                filteredList.addAll(todosFull);
+            }else{
+                String filterPattern = constraint.toString().toLowerCase().trim();
+                for(Todo item : todosFull){
+                    if(item.getTitle().toLowerCase().contains(filterPattern)){
+                        filteredList.add(item);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            todos.clear();
+            todos.addAll((ArrayList) results.values);
+            notifyDataSetChanged();
+
+        }
+    };
 }
