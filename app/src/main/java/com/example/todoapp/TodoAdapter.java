@@ -117,6 +117,12 @@ public class  TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoHolder> i
                     if(item.getTitle().toLowerCase().contains(filterPattern)){
                         filteredList.add(item);
                     }
+                    if(item.getDescription().toLowerCase().contains(filterPattern)){
+                        filteredList.add(item);
+                    }
+                    if(item.getDate().toLowerCase().contains(filterPattern)){
+                        filteredList.add(item);
+                    }
                 }
             }
             FilterResults results = new FilterResults();
