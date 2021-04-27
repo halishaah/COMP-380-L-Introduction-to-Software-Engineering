@@ -15,17 +15,17 @@ public class Todo_Util extends DB_Util {
 
     // @name createTodo
     // @desc creates a new item
-    public boolean createTodo(Todo todo) {
+    public int createTodo(Todo todo) {
         ContentValues val = new ContentValues();
         val.put("title", todo.getTitle());
         val.put("description", todo.getDescription());
         val.put("date",todo.getDate());
 
         SQLiteDatabase db = this.getWritableDatabase();
-        boolean greatSuccess = db.insert("Todo", null, val) > 0;
+        int dbID = (int) db.insert("Todo", null, val);
         db.close();
 
-        return greatSuccess;
+        return dbID;
     }
 
     // @name getTodos
@@ -109,7 +109,6 @@ public class Todo_Util extends DB_Util {
 
         boolean greatSuccess = db.update("Todo", val, "id='"+todo.getId()+"'", null) > 0;
         db.close();
-
         return greatSuccess;
     }
 

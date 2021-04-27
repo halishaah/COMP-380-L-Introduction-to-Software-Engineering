@@ -7,8 +7,9 @@
     tools:context=".UpdateTodo">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="394dp"
-        android:layout_height="510dp"
+        android:id="@+id/cardView"
+        android:layout_width="381dp"
+        android:layout_height="592dp"
         android:layout_marginHorizontal="10dp"
         android:elevation="9dp"
         android:transitionName="expanding_transition"
@@ -17,8 +18,8 @@
         tools:layout_editor_absoluteX="8dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="385dp"
-            android:layout_height="456dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -59,13 +60,40 @@
                 android:layout_height="159dp"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:calendarViewShown="false"
+                android:layout_marginTop="4dp"
 
+                android:calendarViewShown="false"
                 android:datePickerMode="spinner"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.488"
+                app:layout_constraintHorizontal_bias="0.377"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/update_up_desc" />
+
+            <TimePicker
+                android:id="@+id/timePicker2"
+                android:layout_width="337dp"
+                android:layout_height="116dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="16dp"
+                android:timePickerMode="spinner"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/datePicker"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <CheckBox
+                android:id="@+id/checkBox2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Remind Me"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/timePicker2"
+                app:layout_constraintVertical_bias="0.0" />
 
             <LinearLayout
                 android:id="@+id/btn_util"
@@ -73,9 +101,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.497"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/datePicker">
+                app:layout_constraintTop_toBottomOf="@+id/checkBox2">
 
                 <Button
                     android:id="@+id/btn_save"
@@ -104,4 +131,5 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

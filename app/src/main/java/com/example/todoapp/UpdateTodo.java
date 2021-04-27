@@ -2,17 +2,25 @@ package com.example.todoapp;
 
 // Java imports of pachkages
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.transition.TransitionManager;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
+
+import java.util.Calendar;
 
 public class UpdateTodo extends AppCompatActivity {
 
@@ -20,6 +28,8 @@ public class UpdateTodo extends AppCompatActivity {
     EditText update_title, update_desc;
     TextView update_date;
     DatePicker update_datePicker;
+    TimePicker timePicker2;
+    CheckBox checkbox2;
 
     // Create the save and exit buttons
     Button btnExit, btnSave;
@@ -40,6 +50,8 @@ public class UpdateTodo extends AppCompatActivity {
         update_desc = findViewById(R.id.update_up_desc);
         View inflatedView = getLayoutInflater().inflate(R.layout.activity_main, null);
         update_date = (TextView) inflatedView.findViewById(R.id.txt_todo_date);
+        timePicker2 = (TimePicker) findViewById(R.id.timePicker2);
+        checkbox2 = (CheckBox) findViewById(R.id.checkBox2);
 
 
         update_datePicker=findViewById(R.id.datePicker);
@@ -64,6 +76,15 @@ public class UpdateTodo extends AppCompatActivity {
                 Todo todo = new Todo(update_title.getText().toString(), update_desc.getText().toString(), date);
                 String title=todo.getTitle();
                 String desc = todo.getDescription();
+
+                //set calendar object to selected date and time
+                Calendar cUpdate = Calendar.getInstance();
+                cUpdate.set(Calendar.MONTH,update_datePicker.getMonth());
+                cUpdate.set(Calendar.DAY_OF_MONTH,update_datePicker.getDayOfMonth());
+                cUpdate.set(Calendar.YEAR,update_datePicker.getYear());
+                cUpdate.set(Calendar.HOUR_OF_DAY,timePicker2.getCurrentHour());
+                cUpdate.set(Calendar.MINUTE,timePicker2.getCurrentMinute());
+                cUpdate.set(Calendar.SECOND,0);
                 //Set same id as in databse for that todo
                 // Put default as one for error handling in case id does not show up
                 todo.setId(intent.getIntExtra("id", 1));
@@ -72,7 +93,8 @@ public class UpdateTodo extends AppCompatActivity {
                 if ((todo.checkTitle(title)==1) && (todo.checkDescription(desc)==1)) {
                     if (new Todo_Util(UpdateTodo.this).updateTodo(todo)) {
                         Toast.makeText(UpdateTodo.this, "Todo Updated", Toast.LENGTH_SHORT).show();
-
+                        //update Reminder method
+                        updateReminder(cUpdate,todo, checkbox2.isChecked());
                     } else {
                         Toast.makeText(UpdateTodo.this, "Update Failed, Please try again!", Toast.LENGTH_SHORT).show();
                     }
@@ -139,5 +161,26 @@ public class UpdateTodo extends AppCompatActivity {
         int year = update_datePicker.getYear();
         String date = (month1+"/"+day1+"/"+year);
         return date;
+    }
+//    update the reminder when todo is updated.
+    public void updateReminder(Calendar c, Todo todo, boolean newReminder){
+        //cancel old reminder
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intentCancel = new Intent(this, AlertReceiver.class);
+        PendingIntent pendingIntentCancel = PendingIntent.getBroadcast(this,todo.getId(), intentCancel, 0);
+        alarmManager.cancel(pendingIntentCancel);
+        pendingIntentCancel.cancel();
+        //new reminder
+        if(newReminder) {
+            Intent intent = new Intent(this, AlertReceiver.class);
+            intent.putExtra("id_num",todo.getId());
+            intent.putExtra("task_title",todo.getTitle());
+            intent.putExtra("task_message",todo.getDescription());
+            System.out.println(intent.getStringExtra("task_title"));
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this,todo.getId(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+            }
+        }
     }
 }
