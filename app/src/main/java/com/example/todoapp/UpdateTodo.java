@@ -1,8 +1,6 @@
 package com.example.todoapp;
 
 // Java imports of pachkages
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -11,14 +9,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.transition.TransitionManager;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Calendar;
 
@@ -52,6 +54,11 @@ public class UpdateTodo extends AppCompatActivity {
         update_date = (TextView) inflatedView.findViewById(R.id.txt_todo_date);
         timePicker2 = (TimePicker) findViewById(R.id.timePicker2);
         checkbox2 = (CheckBox) findViewById(R.id.checkBox2);
+        //populates the spinner
+        Spinner repeatSpinner = findViewById(R.id.spinner1);
+        ArrayAdapter<CharSequence> adapterRepeat = ArrayAdapter.createFromResource(this,R.array.repeat, android.R.layout.simple_spinner_item);
+        adapterRepeat.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        repeatSpinner.setAdapter(adapterRepeat);
 
 
         update_datePicker=findViewById(R.id.datePicker);
@@ -76,6 +83,7 @@ public class UpdateTodo extends AppCompatActivity {
                 Todo todo = new Todo(update_title.getText().toString(), update_desc.getText().toString(), date);
                 String title=todo.getTitle();
                 String desc = todo.getDescription();
+                String repeatSpinnerValue = repeatSpinner.getSelectedItem().toString();
 
                 //set calendar object to selected date and time
                 Calendar cUpdate = Calendar.getInstance();
@@ -94,7 +102,13 @@ public class UpdateTodo extends AppCompatActivity {
                     if (new Todo_Util(UpdateTodo.this).updateTodo(todo)) {
                         Toast.makeText(UpdateTodo.this, "Todo Updated", Toast.LENGTH_SHORT).show();
                         //update Reminder method
-                        updateReminder(cUpdate,todo, checkbox2.isChecked());
+                        //check if repeating
+                        if(repeatSpinnerValue.equals("Never")) {
+                            updateReminder(cUpdate, todo, checkbox2.isChecked());
+                        }
+                        else{
+                            updateReminderRecurring(cUpdate, todo, checkbox2.isChecked(),repeatSpinnerValue);
+                        }
                     } else {
                         Toast.makeText(UpdateTodo.this, "Update Failed, Please try again!", Toast.LENGTH_SHORT).show();
                     }
@@ -176,6 +190,27 @@ public class UpdateTodo extends AppCompatActivity {
             intent.putExtra("id_num",todo.getId());
             intent.putExtra("task_title",todo.getTitle());
             intent.putExtra("task_message",todo.getDescription());
+            intent.putExtra("frequency", "Never");
+            System.out.println(intent.getStringExtra("task_title"));
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this,todo.getId(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+            }
+        }
+    }
+    public void updateReminderRecurring(Calendar c, Todo todo, boolean newReminder, String period){
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intentCancel = new Intent(this, AlertReceiver.class);
+        PendingIntent pendingIntentCancel = PendingIntent.getBroadcast(this,todo.getId(), intentCancel, 0);
+        alarmManager.cancel(pendingIntentCancel);
+        pendingIntentCancel.cancel();
+        //new reminder
+        if(newReminder) {
+            Intent intent = new Intent(this, AlertReceiver.class);
+            intent.putExtra("id_num",todo.getId());
+            intent.putExtra("task_title",todo.getTitle());
+            intent.putExtra("task_message",todo.getDescription());
+            intent.putExtra("frequency", period);
             System.out.println(intent.getStringExtra("task_title"));
             PendingIntent pendingIntent = PendingIntent.getBroadcast(this,todo.getId(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

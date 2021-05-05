@@ -1,16 +1,5 @@
 package com.example.todoapp;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.view.ViewCompat;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -23,12 +12,25 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -59,6 +61,11 @@ public class MainActivity extends AppCompatActivity {
                 EditText updateDesc = viewInput.findViewById(R.id.update_desc);
                 DatePicker updateDate = viewInput.findViewById(R.id.datePicker);
                 CheckBox checkBox = viewInput.findViewById(R.id.checkBox);
+                Spinner repeatSpinner = viewInput.findViewById(R.id.recurring_spinner);
+                ArrayAdapter<CharSequence>adapterRepeat = ArrayAdapter.createFromResource(inflater.getContext(),R.array.repeat, android.R.layout.simple_spinner_item);
+                adapterRepeat.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                repeatSpinner.setAdapter(adapterRepeat);
+
                 new AlertDialog.Builder(MainActivity.this)
                         .setView(viewInput)
                         .setTitle("Add A Todo")
@@ -67,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 String title1 = updateTitle.getText().toString();
                                 String desc1 = updateDesc.getText().toString();
+                                String repeatSpinnerValue = repeatSpinner.getSelectedItem().toString();
 
                                 //formats extra 0's
                                 int day = updateDate.getDayOfMonth();
@@ -110,11 +118,18 @@ public class MainActivity extends AppCompatActivity {
                                     int todoID = new Todo_Util(MainActivity.this).createTodo(todo);
                                     boolean isInserted = todoID > 0;
                                     if (isInserted) {
-//                                      Could also just pass the id and not set it yet.
                                         todo.setId(todoID);
-//                                      ---------------------------------------------
-                                        if(remindMe)
-                                            setReminder(c, todo);
+                                        if(remindMe) {
+                                            //check if no repeating
+                                            if(repeatSpinnerValue.equals("Never")) {
+                                                setReminder(c, todo);
+                                                System.out.println("Never");
+                                            }
+                                            else{
+                                                setRecurringRemind(c,todo, repeatSpinnerValue);
+                                                System.out.println("recurring");
+                                            }
+                                        }
                                         Toast.makeText(MainActivity.this, "Successful", Toast.LENGTH_SHORT).show();
                                         loadTheTodos();
                                     } else {
@@ -199,12 +214,22 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("id_num",todo.getId());
         intent.putExtra("task_title",todo.getTitle());
         intent.putExtra("task_message",todo.getDescription());
+        intent.putExtra("frequency","Never");
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,todo.getId(), intent, 0);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
-//            System.out.println(Build.VERSION.SDK_INT+">="+ Build.VERSION_CODES.O);
-//            System.out.println(c.getTime().toString());
-//            System.out.println(DateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime()));
+        }
+    }
+    private void setRecurringRemind(Calendar c, Todo todo, String period){
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlertReceiver.class);
+        intent.putExtra("id_num",todo.getId());
+        intent.putExtra("task_title",todo.getTitle());
+        intent.putExtra("task_message",todo.getDescription());
+        intent.putExtra("frequency",period);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,todo.getId(), intent, 0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
         }
     }
     private void cancelReminder(int idNum){
