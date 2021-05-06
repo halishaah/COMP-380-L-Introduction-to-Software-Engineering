@@ -29,8 +29,8 @@
 
     <DatePicker
         android:id="@+id/datePicker"
-        android:layout_width="345dp"
-        android:layout_height="183dp"
+        android:layout_width="340dp"
+        android:layout_height="159dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:calendarViewShown="false"
@@ -50,16 +50,41 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/datePicker" />
 
-    <CheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Remind Me"
+    <Spinner
+        android:id="@+id/recurring_spinner"
+        android:layout_width="115dp"
+        android:layout_height="28dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/checkBox"
+        app:layout_constraintHorizontal_bias="0.884"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/timePicker1"
         app:layout_constraintVertical_bias="0.0" />
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="126dp"
+        android:layout_height="32dp"
+        android:text="Remind Me"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.865"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/timePicker1"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="77dp"
+        android:layout_height="28dp"
+        android:text="Repeat"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/recurring_spinner"
+        app:layout_constraintHorizontal_bias="0.808"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/timePicker1"
+        app:layout_constraintVertical_bias="0.003" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
