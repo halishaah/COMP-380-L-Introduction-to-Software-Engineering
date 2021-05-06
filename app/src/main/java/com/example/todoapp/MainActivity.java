@@ -177,6 +177,9 @@ public class MainActivity extends AppCompatActivity {
                 // Notify the adapter of the removal
                 todoAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
 
+                //fixes the search by reloading the todos array
+                loadTheTodos();
+
 
             }
         };
