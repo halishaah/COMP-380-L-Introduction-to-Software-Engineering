@@ -48,6 +48,7 @@ public class UpdateTodo extends AppCompatActivity {
         Intent intent = getIntent();
 
         linearLayout = findViewById(R.id.btn_util);
+
         update_title = findViewById(R.id.update_up_title);
         update_desc = findViewById(R.id.update_up_desc);
         View inflatedView = getLayoutInflater().inflate(R.layout.activity_main, null);
@@ -77,6 +78,7 @@ public class UpdateTodo extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
 
                 String date = dateFormat();
 
