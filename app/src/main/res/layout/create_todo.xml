@@ -73,8 +73,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.865"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timePicker1"
+        app:layout_constraintTop_toBottomOf="@+id/recurring_spinner"
         app:layout_constraintVertical_bias="0.0" />
+
+    <Spinner
+        android:id="@+id/reminder_spinner"
+        android:layout_width="115dp"
+        android:layout_height="28dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/checkBox"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recurring_spinner"
+        app:layout_constraintVertical_bias="0.014" />
 
     <TextView
         android:id="@+id/textView"

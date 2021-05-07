@@ -98,8 +98,18 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.91"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/timePicker2"
+                app:layout_constraintTop_toBottomOf="@+id/spinner1"
                 app:layout_constraintVertical_bias="0.0" />
+
+            <Spinner
+                android:id="@+id/spinner2"
+                android:layout_width="126dp"
+                android:layout_height="29dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/btn_util"
+                app:layout_constraintEnd_toStartOf="@+id/checkBox2"
+                app:layout_constraintTop_toBottomOf="@+id/spinner1"
+                app:layout_constraintVertical_bias="1.0" />
 
             <LinearLayout
                 android:id="@+id/btn_util"
