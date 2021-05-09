@@ -136,7 +136,6 @@ public class  TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoHolder> i
             todos.clear();
             todos.addAll((ArrayList) results.values);
             notifyDataSetChanged();
-
         }
     };
 }
