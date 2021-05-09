@@ -89,10 +89,17 @@ public class MainActivity extends AppCompatActivity {
                 DatePicker updateDate = viewInput.findViewById(R.id.datePicker);
                 CheckBox checkBox = viewInput.findViewById(R.id.checkBox);
 
+                //repeat
                 Spinner repeatSpinner = viewInput.findViewById(R.id.recurring_spinner);
                 ArrayAdapter<CharSequence>adapterRepeat = ArrayAdapter.createFromResource(inflater.getContext(),R.array.repeat, android.R.layout.simple_spinner_item);
                 adapterRepeat.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 repeatSpinner.setAdapter(adapterRepeat);
+
+                //reminder
+                Spinner reminderSpinner = viewInput.findViewById(R.id.reminder_spinner);
+                ArrayAdapter<CharSequence>adapterReminder = ArrayAdapter.createFromResource(inflater.getContext(),R.array.reminder, android.R.layout.simple_spinner_item);
+                adapterReminder.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                reminderSpinner.setAdapter(adapterReminder);
 
                 new AlertDialog.Builder(MainActivity.this,R.style.AlertDialogStyle)
 
@@ -105,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
                                 String title1 = updateTitle.getText().toString();
                                 String desc1 = updateDesc.getText().toString();
                                 String repeatSpinnerValue = repeatSpinner.getSelectedItem().toString();
+                                String reminderSpinnerValue = reminderSpinner.getSelectedItem().toString();
 
                                 //formats extra 0's
                                 int day = updateDate.getDayOfMonth();
@@ -149,6 +157,19 @@ public class MainActivity extends AppCompatActivity {
                                     boolean isInserted = todoID > 0;
                                     if (isInserted) {
                                         todo.setId(todoID);
+
+                                        if(reminderSpinnerValue.equals("15 Minutes Before")){
+                                            c.add(Calendar.MINUTE,-15);
+                                        }
+                                        else if(reminderSpinnerValue.equals("30 Minutes Before")){
+                                            c.add(Calendar.MINUTE,-30);
+                                        }
+                                        else if(reminderSpinnerValue.equals("One Day Before")){
+                                            c.add(Calendar.DATE,-1);
+                                        }
+                                        else if(reminderSpinnerValue.equals("at time")){
+                                            setReminder(c, todo);
+                                        }
                                           
                                         if(remindMe) {
                                             //check if no repeating

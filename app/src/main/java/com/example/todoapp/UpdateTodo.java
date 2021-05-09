@@ -62,6 +62,13 @@ public class UpdateTodo extends AppCompatActivity {
         repeatSpinner.setAdapter(adapterRepeat);
 
 
+        //populates the spinner for reminder
+        Spinner reminderSpinner = findViewById(R.id.spinner2);
+        ArrayAdapter<CharSequence> adapterReminder = ArrayAdapter.createFromResource(this,R.array.reminder, android.R.layout.simple_spinner_item);
+        adapterReminder.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        reminderSpinner.setAdapter(adapterReminder);
+
+
         update_datePicker=findViewById(R.id.datePicker);
         btnExit = findViewById(R.id.btn_exit);
         btnSave = findViewById(R.id.btn_save);
@@ -87,6 +94,8 @@ public class UpdateTodo extends AppCompatActivity {
                 String desc = todo.getDescription();
                 String repeatSpinnerValue = repeatSpinner.getSelectedItem().toString();
 
+                String reminderSpinnerValue = reminderSpinner.getSelectedItem().toString();
+
                 //set calendar object to selected date and time
                 Calendar cUpdate = Calendar.getInstance();
                 cUpdate.set(Calendar.MONTH,update_datePicker.getMonth());
@@ -103,6 +112,21 @@ public class UpdateTodo extends AppCompatActivity {
                 if ((todo.checkTitle(title)==1) && (todo.checkDescription(desc)==1)) {
                     if (new Todo_Util(UpdateTodo.this).updateTodo(todo)) {
                         Toast.makeText(UpdateTodo.this, "Todo Updated", Toast.LENGTH_SHORT).show();
+
+                        //for 15 min, 30 min, and one day before
+                        if(reminderSpinnerValue.equals("15 Minutes Before")){
+                            cUpdate.add(Calendar.MINUTE,-15);
+                        }
+                        else if(reminderSpinnerValue.equals("30 Minutes Before")){
+                            cUpdate.add(Calendar.MINUTE,-30);
+                        }
+                        else if(reminderSpinnerValue.equals("One Day Before")){
+                            cUpdate.add(Calendar.DATE,-1);
+                        }
+                        else if(reminderSpinnerValue.equals("at time")){
+                            updateReminder(cUpdate, todo, checkbox2.isChecked());
+                        }
+
                         //update Reminder method
                         //check if repeating
                         if(repeatSpinnerValue.equals("Never")) {
