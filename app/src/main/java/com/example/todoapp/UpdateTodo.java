@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.transition.TransitionManager;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -32,6 +33,7 @@ public class UpdateTodo extends AppCompatActivity {
     DatePicker update_datePicker;
     TimePicker timePicker2;
     CheckBox checkbox2;
+    Button addGoogle;
 
     // Create the save and exit buttons
     Button btnExit, btnSave;
@@ -55,6 +57,7 @@ public class UpdateTodo extends AppCompatActivity {
         update_date = (TextView) inflatedView.findViewById(R.id.txt_todo_date);
         timePicker2 = (TimePicker) findViewById(R.id.timePicker2);
         checkbox2 = (CheckBox) findViewById(R.id.checkBox2);
+        addGoogle = findViewById(R.id.addGoogle);
         //populates the spinner
         Spinner repeatSpinner = findViewById(R.id.spinner1);
         ArrayAdapter<CharSequence> adapterRepeat = ArrayAdapter.createFromResource(this,R.array.repeat, android.R.layout.simple_spinner_item);
@@ -78,6 +81,37 @@ public class UpdateTodo extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+
+        addGoogle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!update_title.getText().toString().isEmpty() && !update_desc.getText().toString().isEmpty()) {
+                    Intent intent = new Intent(Intent.ACTION_INSERT);
+                    String calName = "vnd.android.cursor.item/event";
+                    intent.setType(calName);
+
+                    Calendar cal = Calendar.getInstance();
+                    long startTime = cal.getTimeInMillis();
+                    long endTime = cal.getTimeInMillis() + 60 * 60 * 1000;
+
+                    intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startTime);
+                    intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime);
+
+                    intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true);
+                    intent.putExtra(CalendarContract.Events.TITLE, update_title.getText().toString());
+                    intent.putExtra(CalendarContract.Events.DESCRIPTION, update_desc.getText().toString());
+                    intent.putExtra(Intent.EXTRA_EMAIL, "test@gmail.com, test2@gmail.com");
+
+                    if (calName == "vnd.android.cursor.item/event") {
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(UpdateTodo.this, "No calendar found", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(UpdateTodo.this, "Fields are empty", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -224,6 +258,7 @@ public class UpdateTodo extends AppCompatActivity {
             }
         }
     }
+
     public void updateReminderRecurring(Calendar c, Todo todo, boolean newReminder, String period){
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intentCancel = new Intent(this, AlertReceiver.class);

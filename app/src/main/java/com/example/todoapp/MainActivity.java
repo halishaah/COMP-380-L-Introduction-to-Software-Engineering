@@ -22,6 +22,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,6 +31,7 @@ import android.view.View;
 
 import android.widget.ArrayAdapter;
 
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
     TimePicker timePicker;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
                 ArrayAdapter<CharSequence>adapterReminder = ArrayAdapter.createFromResource(inflater.getContext(),R.array.reminder, android.R.layout.simple_spinner_item);
                 adapterReminder.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 reminderSpinner.setAdapter(adapterReminder);
+
+
 
                 new AlertDialog.Builder(MainActivity.this,R.style.AlertDialogStyle)
 
