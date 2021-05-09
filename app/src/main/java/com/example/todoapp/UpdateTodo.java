@@ -89,18 +89,21 @@ public class UpdateTodo extends AppCompatActivity {
             public void onClick(View v) {
                 if (!update_title.getText().toString().isEmpty() && !update_desc.getText().toString().isEmpty()) {
                     Intent intent = new Intent(Intent.ACTION_INSERT);
-                    intent.setData(CalendarContract.Events.CONTENT_URI);
+                    intent.setType("vnd.android.cursor.item/event");
+
+                    Calendar cal = Calendar.getInstance();
+                    long startTime = cal.getTimeInMillis();
+                    long endTime = cal.getTimeInMillis() + 60 * 60 * 1000;
+
+                    intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startTime);
+                    intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime);
+
+                    intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true);
                     intent.putExtra(CalendarContract.Events.TITLE, update_title.getText().toString());
                     intent.putExtra(CalendarContract.Events.DESCRIPTION, update_desc.getText().toString());
-                    intent.putExtra(CalendarContract.Events.ALL_DAY, "true");
                     intent.putExtra(Intent.EXTRA_EMAIL, "test@gmail.com, test2@gmail.com");
 
-                    // Check if there is an avaialable app
-                    if (intent.resolveActivity(getPackageManager()) != null) {
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(UpdateTodo.this, "NO APP SUPPORT!", Toast.LENGTH_SHORT).show();
-                    }
+                    startActivity(intent);
                 } else {
                     Toast.makeText(UpdateTodo.this, "Fields are empty", Toast.LENGTH_SHORT).show();
                 }
