@@ -89,7 +89,8 @@ public class UpdateTodo extends AppCompatActivity {
             public void onClick(View v) {
                 if (!update_title.getText().toString().isEmpty() && !update_desc.getText().toString().isEmpty()) {
                     Intent intent = new Intent(Intent.ACTION_INSERT);
-                    intent.setType("vnd.android.cursor.item/event");
+                    String calName = "vnd.android.cursor.item/event";
+                    intent.setType(calName);
 
                     Calendar cal = Calendar.getInstance();
                     long startTime = cal.getTimeInMillis();
@@ -103,7 +104,11 @@ public class UpdateTodo extends AppCompatActivity {
                     intent.putExtra(CalendarContract.Events.DESCRIPTION, update_desc.getText().toString());
                     intent.putExtra(Intent.EXTRA_EMAIL, "test@gmail.com, test2@gmail.com");
 
-                    startActivity(intent);
+                    if (calName == "vnd.android.cursor.item/event") {
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(UpdateTodo.this, "No calendar found", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(UpdateTodo.this, "Fields are empty", Toast.LENGTH_SHORT).show();
                 }
