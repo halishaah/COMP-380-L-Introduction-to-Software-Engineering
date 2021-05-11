@@ -20,6 +20,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -29,6 +30,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import android.widget.Button;
@@ -37,6 +39,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -61,7 +64,7 @@ import java.util.Calendar;
 
 import static com.example.todoapp.R.layout.create_todo;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     ImageButton imageButton;
     ArrayList<Todo> todos;
@@ -82,8 +85,8 @@ public class MainActivity extends AppCompatActivity {
             @SuppressLint("ResourceType")
             @Override
             public void onClick(View v) {
-               YoYo.with(Techniques.Tada).duration(400).repeat(2).playOn(imageButton);
-             //  randomAnimation(imageButton);
+                YoYo.with(Techniques.Tada).duration(400).repeat(2).playOn(imageButton);
+                //  randomAnimation(imageButton);
                 LayoutInflater inflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View viewInput = inflater.inflate(create_todo, null, false);
 
@@ -175,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
                                         else if(reminderSpinnerValue.equals("at time")){
                                             setReminder(c, todo);
                                         }
-                                          
+
                                         if(remindMe) {
                                             //check if no repeating
                                             if(repeatSpinnerValue.equals("Never")) {
@@ -186,11 +189,11 @@ public class MainActivity extends AppCompatActivity {
                                                 setRecurringRemind(c,todo, repeatSpinnerValue);
                                                 System.out.println("recurring");
                                             }
-                                          
+
                                         }
                                         Toast.makeText(MainActivity.this, "Successful", Toast.LENGTH_SHORT).show();
-                                        loadTheTodos();
-             
+                                        loadTheTodos(0);
+
                                     } else {
                                         Toast.makeText(MainActivity.this, "Error Saving", Toast.LENGTH_SHORT).show();
                                     }
@@ -208,12 +211,20 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }
                         }).setIcon(getResources().getDrawable(android.R.drawable.checkbox_on_background))
-            .create().show();
+                        .create().show();
 
 
             }
 
         });
+
+        //sort button (spinner)
+        Spinner spinner = findViewById(R.id.sort_button);
+        ArrayAdapter<CharSequence> sortAdapter = ArrayAdapter.createFromResource(this, R.array.sort, android.R.layout.simple_spinner_item);
+        sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(sortAdapter);
+        spinner.setOnItemSelectedListener(this);
+
 
         recyclerView = findViewById(R.id.recycler);
 
@@ -240,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
                 todoAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
 
                 //fixes the search by reloading the todos array
-                loadTheTodos();
+                loadTheTodos(0);
 
 
             }
@@ -252,18 +263,18 @@ public class MainActivity extends AppCompatActivity {
         // Attach to recyvler view
         itemTouchHelper.attachToRecyclerView((recyclerView));
 
-        loadTheTodos();
+        loadTheTodos(0);
     }
 
-    public ArrayList<Todo> getTodos() {
-        ArrayList<Todo> todos = new Todo_Util(this).getTodos();
+    public ArrayList<Todo> getTodos(int sortingV) {
+        ArrayList<Todo> todos = new Todo_Util(this).getTodos(sortingV);
 
         return todos;
     }
 
     // Load the todos
-    public void loadTheTodos() {
-        todos = getTodos();
+    public void loadTheTodos(int sortingV) {
+        todos = getTodos(sortingV);
         todoAdapter = new TodoAdapter(todos, this, new TodoAdapter.ItemClicked() {
             @Override
             public void onClick(int position, View view) {
@@ -330,7 +341,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1) {
-            loadTheTodos();
+            loadTheTodos(0);
         }
     }
 
@@ -362,6 +373,22 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (position == 0) {
+            loadTheTodos(position);
+        } else if (position == 1){
+            loadTheTodos(position);
+        } else {
+            loadTheTodos(position);
+        }
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }
 
 

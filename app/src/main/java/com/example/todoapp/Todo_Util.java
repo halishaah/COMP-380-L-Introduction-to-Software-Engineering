@@ -30,9 +30,13 @@ public class Todo_Util extends DB_Util {
 
     // @name getTodos
     // @desc gets all items
-    public ArrayList<Todo> getTodos() {
+    public ArrayList<Todo> getTodos(int sort) {
         ArrayList<Todo> todos = new ArrayList<>();
         String e = "SELECT * FROM todo ORDER BY id ASC";
+        if(sort == 1)
+            e = "SELECT * FROM todo ORDER BY title ASC";
+        else if(sort == 2)
+            e = "SELECT * FROM todo ORDER BY date ASC";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(e, null);
 
