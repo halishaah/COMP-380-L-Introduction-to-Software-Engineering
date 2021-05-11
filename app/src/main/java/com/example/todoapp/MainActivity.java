@@ -267,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
         todoAdapter = new TodoAdapter(todos, this, new TodoAdapter.ItemClicked() {
             @Override
             public void onClick(int position, View view) {
-                YoYo.with(Techniques.Tada).duration(600).repeat(2).playOn(view);
+                YoYo.with(Techniques.FlipOutX).duration(600).repeat(1).playOn(view);
                 editTodo(todos.get(position).getId(), view);
             }
         });

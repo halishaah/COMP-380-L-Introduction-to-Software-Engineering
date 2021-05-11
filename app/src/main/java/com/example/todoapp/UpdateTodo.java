@@ -186,6 +186,7 @@ public class UpdateTodo extends AppCompatActivity {
                 // Simulate going back to homepage animation
                 btnSave.setVisibility(View.GONE);
                 btnExit.setVisibility(View.GONE);
+                addGoogle.setVisibility(View.GONE);
                 TransitionManager.beginDelayedTransition(linearLayout);
                 onBackPressed();
             }
@@ -214,6 +215,7 @@ public class UpdateTodo extends AppCompatActivity {
     public void onBackPressed() {
         btnSave.setVisibility(View.GONE);
         btnExit.setVisibility(View.GONE);
+        addGoogle.setVisibility(View.GONE);
         TransitionManager.beginDelayedTransition(linearLayout);
         super.onBackPressed();
     }
