@@ -193,8 +193,8 @@ public class UpdateTodo extends AppCompatActivity {
         });
 
         update_title.setText(intent.getStringExtra("title"));
-
         update_desc.setText(intent.getStringExtra("description"));
+
       String s = intent.getStringExtra("date").toString();
            // update_datePicker.updateDate(intent.getIntExtra("month",));
 
