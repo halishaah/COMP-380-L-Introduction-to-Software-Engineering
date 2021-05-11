@@ -37,8 +37,14 @@ public class TodoTest {
     @Test
     public void getDescription1() {
         assertEquals("Plan to exercise on my day off.", t1.getDescription());
-
-
     }
+
+    @Test
+    public void setDescription1()
+    {
+        t1.setDescription(descriptionNew);
+        assertEquals(descriptionNew, t1.getDescription());
+    }
+
 
 }
