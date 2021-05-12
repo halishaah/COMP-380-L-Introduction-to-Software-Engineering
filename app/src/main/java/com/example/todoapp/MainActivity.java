@@ -142,9 +142,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 //                                get date and time and set calendar object
                                 timePicker = (TimePicker) viewInput.findViewById(R.id.timePicker1);
-//                                int day = datePicker.getDayOfMonth();
-//                                int month = datePicker.getMonth();
-//                                int year = datePicker.getYear();
+//                              get time string
+
+                                String time = "";
+                                int hour = timePicker.getCurrentHour();
+                                int min = timePicker.getCurrentMinute();
+                                String minute = "";
+                                if(min<10) minute += "0"+min;
+                                else minute += min;
+                                if(hour==0) time = " "+12+":"+minute+" AM";
+                                else if(hour < 12) time = " "+hour+":"+minute+" AM";
+                                else if(hour == 12) time = " "+12+":"+minute+" PM";
+                                else time = " "+ (hour-12)+":"+minute+" PM";
+                                date += time;
 
                                 Calendar c = Calendar.getInstance();
                                 c.set(Calendar.MONTH, updateDate.getMonth());
@@ -175,9 +185,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                         else if(reminderSpinnerValue.equals("One Day Before")){
                                             c.add(Calendar.DATE,-1);
                                         }
-                                        else if(reminderSpinnerValue.equals("at time")){
-                                            setReminder(c, todo);
-                                        }
+//                                        Should not set reminder here. No action needed for this option
+//                                        else if(reminderSpinnerValue.equals("at time")){
+//                                            setReminder(c, todo);
+//                                        }
 
                                         if(remindMe) {
                                             //check if no repeating

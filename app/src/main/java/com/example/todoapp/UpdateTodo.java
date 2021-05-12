@@ -157,9 +157,10 @@ public class UpdateTodo extends AppCompatActivity {
                         else if(reminderSpinnerValue.equals("One Day Before")){
                             cUpdate.add(Calendar.DATE,-1);
                         }
-                        else if(reminderSpinnerValue.equals("at time")){
-                            updateReminder(cUpdate, todo, checkbox2.isChecked());
-                        }
+//                        Should not set reminder here. No action needed for this option
+//                        else if(reminderSpinnerValue.equals("at time")){
+//                            updateReminder(cUpdate, todo, checkbox2.isChecked());
+//                        }
 
                         //update Reminder method
                         //check if repeating
@@ -197,6 +198,11 @@ public class UpdateTodo extends AppCompatActivity {
 
       String s = intent.getStringExtra("date").toString();
            // update_datePicker.updateDate(intent.getIntExtra("month",));
+        String t = "";
+        if(s.indexOf(" ")!=-1) {
+            t = s.substring(s.indexOf(" ") + 1, s.length());
+            s = s.substring(0, s.indexOf(" "));
+        }
 
         String[] m= s.split("/",2);
 
@@ -207,6 +213,18 @@ public class UpdateTodo extends AppCompatActivity {
         String y= d[1];
         int yy = Integer.parseInt(d[1]);
         update_datePicker.init(yy,mm,dd,DatePicker::updateDate);
+//        update timepicker
+        if(!t.isEmpty()) {
+            int h, mi;
+            String am_pm;
+            h = Integer.parseInt(t.substring(0, t.indexOf(":")));
+            mi = Integer.parseInt(t.substring(t.indexOf(":") + 1, t.indexOf(" ")));
+            am_pm = t.substring(t.indexOf(" ") + 1, t.length());
+            if (am_pm.equals("AM") && h == 12) h = 0;
+            else if (am_pm.equals("PM") && h < 12) h += 12;
+            timePicker2.setCurrentHour(h);
+            timePicker2.setCurrentMinute(mi);
+        }
 
     }
 
@@ -236,6 +254,23 @@ public class UpdateTodo extends AppCompatActivity {
         }
         int year = update_datePicker.getYear();
         String date = (month1+"/"+day1+"/"+year);
+
+        // add time to the date string
+
+        String time = "";
+        int hour = timePicker2.getCurrentHour();
+        int min = timePicker2.getCurrentMinute();
+        String minute = "";
+        //format minute
+        if(min<10) minute = "0"+min;
+        else minute += min;
+        //format hour
+        if(hour==0) time = " "+12+":"+minute+" AM";
+        else if(hour < 12) time = " "+hour+":"+minute+" AM";
+        else if(hour == 12) time = " "+12+":"+minute+" PM";
+        else time = " "+ (hour-12)+":"+minute+" PM";
+        date+=time;
+        
         return date;
     }
 //    update the reminder when todo is updated.
